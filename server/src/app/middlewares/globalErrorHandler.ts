@@ -8,6 +8,7 @@ import { handlerDuplicateError } from "../helpers/handleDuplicateError";
 import { handlerValidationError } from "../helpers/handlerValidationError";
 import { handlerZodError } from "../helpers/handlerZodError";
 import { TErrorSources } from "../interfaces/error.types";
+import { deleteImageFromCLoudinary } from "../config/cloudinary.config";
 
 export const globalErrorHandler = async (
   err: any,
@@ -17,6 +18,9 @@ export const globalErrorHandler = async (
 ) => {
   if (envVars.NODE_ENV === "development") {
     console.log(err);
+  }
+  if (req.file) {
+    await deleteImageFromCLoudinary(req.file.path);
   }
 
   let errorSources: TErrorSources[] = [];
