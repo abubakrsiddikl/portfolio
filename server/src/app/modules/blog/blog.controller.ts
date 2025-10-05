@@ -29,13 +29,17 @@ const createBlog = catchAsync(
 //  Get All Blogs
 const getAllBlogs = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await BlogServices.getAllBlogs();
+    const query = req.query;
+    const result = await BlogServices.getAllBlogs(
+      query as Record<string, string>
+    );
 
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: "Blogs retrieved successfully",
       data: result.data,
+      meta: result.meta,
     });
   }
 );
