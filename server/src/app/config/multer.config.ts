@@ -21,7 +21,11 @@ const storage = new CloudinaryStorage({
       fileName +
       "." +
       extension;
-    return uniqueFileName;
+    return {
+      folder: "portfolio", 
+      public_id: uniqueFileName,
+      resource_type: "image",
+    };
   },
 });
 

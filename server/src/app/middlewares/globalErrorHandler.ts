@@ -22,6 +22,12 @@ export const globalErrorHandler = async (
   if (req.file) {
     await deleteImageFromCLoudinary(req.file.path);
   }
+  if (req.files && Array.isArray(req.files) && req.files.length) {
+    const imageUrls = (req.files as Express.Multer.File[]).map(
+      (file) => file.path
+    );
+    await Promise.all(imageUrls.map((url) => deleteImageFromCLoudinary(url)));
+  }
 
   let errorSources: TErrorSources[] = [];
   let statusCode = 500;
