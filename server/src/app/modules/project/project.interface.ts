@@ -12,6 +12,7 @@ export interface IProject {
   liveLink?: string;
   category?: string;
   isFeatured?: boolean;
+  isPublished?: boolean;
   author: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;

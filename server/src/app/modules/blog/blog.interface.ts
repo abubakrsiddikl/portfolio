@@ -10,6 +10,7 @@ export interface IBlog {
   author: Types.ObjectId;
   isPublished: boolean;
   isFeatured: boolean;
+  views?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

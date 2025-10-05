@@ -34,7 +34,13 @@ const getAllBlogs = async (query: Record<string, string>) => {
 
 //  Get Single Blog by Slug
 const getBlogBySlug = async (slug: string) => {
-  const blog = await Blog.findOne({ slug });
+  // Find the blog and increment views by 1
+  const blog = await Blog.findOneAndUpdate(
+    { slug },
+    { $inc: { views: 1 } }, // views += 1
+    { new: true } // updated document return করবে
+  );
+
   return { data: blog };
 };
 

@@ -50,6 +50,10 @@ const projectSchema = new Schema<IProject>(
       type: Boolean,
       default: false,
     },
+    isPublished: {
+      type: Boolean,
+      default: true,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

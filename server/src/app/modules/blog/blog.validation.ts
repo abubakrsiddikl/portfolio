@@ -8,6 +8,7 @@ export const createBlogZodSchema = z.object({
   tags: z.array(z.string()).optional().default([]),
   isPublished: z.boolean().optional().default(true),
   isFeatured: z.boolean().optional().default(false),
+  views: z.number().optional().default(0),
 });
 
 export const updateBlogZodSchema = z.object({
