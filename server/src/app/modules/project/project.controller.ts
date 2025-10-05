@@ -24,7 +24,10 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllProjects = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProjectServices.getAllProjects();
+  const query = req.query;
+  const result = await ProjectServices.getAllProjects(
+    query as Record<string, string>
+  );
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -46,7 +49,15 @@ const getSingleProject = catchAsync(async (req: Request, res: Response) => {
 
 const updateProject = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await ProjectServices.updateProject(id, req.body);
+  const payload: IProject = req?.files
+    ? {
+        ...req.body,
+        projectImages: (req?.files as Express.Multer.File[]).map(
+          (file) => file.path
+        ),
+      }
+    : { ...req.body };
+  const result = await ProjectServices.updateProject(id, payload);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

@@ -4,7 +4,10 @@ import { checkAuth } from "../../middlewares/checkAuth";
 import { Role } from "../user/user.interface";
 import { multerUpload } from "../../config/multer.config";
 import { zodRequestValidate } from "../../middlewares/zodRequestValidate";
-import { createProjectZodSchema } from "./project.validation";
+import {
+  createProjectZodSchema,
+  updateProjectZodSchema,
+} from "./project.validation";
 
 const router = express.Router();
 
@@ -17,7 +20,13 @@ router.post(
 );
 router.get("/", ProjectControllers.getAllProjects);
 router.get("/:slug", ProjectControllers.getSingleProject);
-router.patch("/update/:id", ProjectControllers.updateProject);
+router.patch(
+  "/update/:id",
+  multerUpload.array("files"),
+  checkAuth(Role.ADMIN),
+  zodRequestValidate(updateProjectZodSchema),
+  ProjectControllers.updateProject
+);
 router.delete("/delete/:id", ProjectControllers.deleteProject);
 
 export const ProjectRoutes = router;

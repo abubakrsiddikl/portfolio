@@ -15,4 +15,5 @@ export interface IProject {
   author: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
+  deleteImages?: string[];
 }

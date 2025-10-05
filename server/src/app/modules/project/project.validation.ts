@@ -12,6 +12,7 @@ export const createProjectZodSchema = z.object({
   liveLink: z.string().optional(),
   category: z.string().optional(),
   isFeatured: z.boolean().optional(),
+  deleteImages: z.array(z.string()).optional(),
 });
 
 export const updateProjectZodSchema = createProjectZodSchema.partial();

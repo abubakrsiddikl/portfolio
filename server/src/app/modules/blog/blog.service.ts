@@ -16,16 +16,13 @@ const createBlog = async (payload: IBlog, decodedToken: JwtPayload) => {
 
 //  Get All Blogs
 const getAllBlogs = async (query: Record<string, string>) => {
-  const queryBuilder = new QueryBuilder(
-    Blog.find(),
-    query
-  );
+  const queryBuilder = new QueryBuilder(Blog.find(), query);
 
-  const tours = queryBuilder.search(["title"]).filter().sort().paginate();
+  const blogs = queryBuilder.search(["title"]).filter().sort().paginate();
 
   // const meta = await queryBuilder.getMeta();
   const [data, meta] = await Promise.all([
-    tours.build(),
+    blogs.build(),
     queryBuilder.getMeta(),
   ]);
 
