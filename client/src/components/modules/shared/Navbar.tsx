@@ -4,20 +4,16 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Navbar() {
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Services", href: "#services" },
-    { name: "Works", href: "#works" },
-    { name: "Resume", href: "#resume" },
-    { name: "Skills", href: "#skills" },
-    { name: "Contact", href: "#contact" },
+    { name: "About Me", href: "about" },
+    { name: "Project", href: "project" },
+    { name: "Skills", href: "skill" },
+    { name: "Blogs", href: "blog" },
+    { name: "Contact", href: "contact" },
   ];
 
   return (
@@ -96,7 +92,10 @@ export default function Navbar() {
                 <span className="text-xl font-semibold text-purple-400">
                   Menu
                 </span>
-                <Button variant="ghost" className="text-gray-300 hover:text-purple-400">
+                <Button
+                  variant="ghost"
+                  className="text-gray-300 hover:text-purple-400"
+                >
                   <X />
                 </Button>
               </div>

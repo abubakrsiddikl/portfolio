@@ -1,7 +1,22 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  @keyframes fade-glow {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 0.3;
+    }
+  }
+
+  --animate-fade-glow-once: fade-glow 2s ease-out forwards;
+}
+
 
 @theme inline {
   --color-background: var(--background);
