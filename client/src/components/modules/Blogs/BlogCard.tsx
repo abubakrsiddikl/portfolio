@@ -41,7 +41,7 @@ export default function BlogCard({ blog }: Props) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#6d28d9_20%,_transparent_60%)] opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
 
         {/* Thumbnail */}
-        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl border-b border-white/10">
+        <div className="relative w-full aspect-[16/12] overflow-hidden rounded-t-2xl border-b border-white/10">
           {blog.thumbnail ? (
             <Image
               src={blog.thumbnail}
@@ -64,7 +64,7 @@ export default function BlogCard({ blog }: Props) {
         </div>
 
         {/* Content */}
-        <CardContent className="relative z-10 p-5 space-y-4">
+        <CardContent className="relative z-10 p-5 space-y-2">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-xs text-indigo-300 uppercase tracking-wider">
@@ -102,7 +102,7 @@ export default function BlogCard({ blog }: Props) {
             <div className="text-xs text-gray-400">
               <div>
                 By{" "}
-                <span className="text-gray-200 font-medium">
+                <span className="text-gray-200 font-medium line-clamp-1">
                   {blog.author?.name || "Anonymous"}
                 </span>
               </div>
@@ -112,8 +112,8 @@ export default function BlogCard({ blog }: Props) {
             </div>
 
             <Link href={`/blogs/${blog.slug}`}>
-              <Button size="sm" className="bg-[#6f09b8]">
-                Read More...
+              <Button size="sm" className="bg-[#6f09b8] ">
+                Read More..
               </Button>
             </Link>
           </div>

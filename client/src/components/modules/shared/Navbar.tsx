@@ -5,8 +5,11 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About Me", href: "about" },
@@ -46,22 +49,30 @@ export default function Navbar() {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, index) => (
-            <motion.div
-              key={index}
-              whileHover={{
-                scale: 1.1,
-                textShadow: "0px 0px 10px #a855f7",
-              }}
-            >
-              <Link
-                href={link.href}
-                className="text-gray-300 hover:text-purple-400 transition-colors duration-300 font-medium"
+          {navLinks.map((link, index) => {
+            const isActive =
+              pathname === link.href || pathname.startsWith(`/${link.href}`);
+            return (
+              <motion.div
+                key={index}
+                whileHover={{
+                  scale: 1.1,
+                  textShadow: "0px 0px 10px #a855f7",
+                }}
               >
-                {link.name}
-              </Link>
-            </motion.div>
-          ))}
+                <Link
+                  href={link.href}
+                  className={`transition-colors duration-300 font-medium ${
+                    isActive
+                      ? "text-purple-400 border-b-2 border-purple-500 pb-1"
+                      : "text-gray-300 hover:text-purple-400"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              </motion.div>
+            );
+          })}
         </nav>
 
         {/* Hire Me Button */}
@@ -100,7 +111,7 @@ export default function Navbar() {
                 </Button>
               </div>
               <div className="flex flex-col gap-6">
-                {navLinks.map((link, index) => (
+                {/* {navLinks.map((link, index) => (
                   <motion.div
                     key={index}
                     whileHover={{
@@ -116,7 +127,31 @@ export default function Navbar() {
                       {link.name}
                     </Link>
                   </motion.div>
-                ))}
+                ))} */}
+                {navLinks.map((link, index) => {
+                  const isActive =
+                    pathname === link.href ||
+                    pathname.startsWith(`/${link.href}`);
+                  return (
+                    <motion.div
+                      key={index}
+                      whileHover={{ scale: 1.05, color: "#a855f7" }}
+                      transition={{ type: "spring", stiffness: 200 }}
+                    >
+                      <Link
+                        href={link.href}
+                        className={`text-lg font-medium transition ${
+                          isActive
+                            ? "text-purple-400"
+                            : "text-gray-300 hover:text-purple-400"
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+
                 <Button className="bg-purple-600 hover:bg-purple-700 mt-6 text-white">
                   Hire Me
                 </Button>
