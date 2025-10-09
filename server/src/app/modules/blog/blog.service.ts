@@ -22,7 +22,7 @@ const getAllBlogs = async (query: Record<string, string>) => {
 
   // const meta = await queryBuilder.getMeta();
   const [data, meta] = await Promise.all([
-    blogs.build(),
+    blogs.build().populate("author", "name email -_id"),
     queryBuilder.getMeta(),
   ]);
 

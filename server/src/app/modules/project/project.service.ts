@@ -22,7 +22,7 @@ const getAllProjects = async (query: Record<string, string>) => {
 
   // const meta = await queryBuilder.getMeta();
   const [data, meta] = await Promise.all([
-    projects.build(),
+    projects.build().populate("author", "name email -_id"),
     queryBuilder.getMeta(),
   ]);
 
