@@ -10,3 +10,8 @@ export const getAllRecentProject = async (): Promise<IProject[]> => {
   const res = await apiRequest<IProject[]>("/project?limit=3");
   return res.data;
 };
+
+export const getProjectBySlug = async (slug: string): Promise<IProject> => {
+  const res = await apiRequest<IProject>(`/project/${slug}`);
+  return res.data;
+};

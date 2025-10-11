@@ -3,7 +3,6 @@ import { getAllProjects } from "@/services";
 
 export default async function AllProjectsPage() {
   const getAllProject = await getAllProjects();
-  console.log(getAllProject);
   return (
     <section className="relative min-h-screen  bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden">
       {/* Background glow */}

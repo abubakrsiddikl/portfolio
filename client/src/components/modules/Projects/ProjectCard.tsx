@@ -23,12 +23,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       viewport={{ once: true }}
       className="w-full"
     >
-      <Card className="group relative overflow-hidden rounded-2xl shadow-md bg-gradient-to-br from-[#0a021f] via-[#120336] to-[#1a0449] hover:shadow-2xl transition-all duration-500 border-[4px] text-white">
+      <Card className="group relative overflow-hidden rounded-sm shadow-md bg-gradient-to-br from-[#0a021f] via-[#120336] to-[#1a0449] hover:shadow-2xl transition-all duration-500  text-white">
         {/* Thumbnail */}
         <div className="relative aspect-[16/10] overflow-hidden">
           <Image
             src={project.projectImages?.[0] || "/placeholder.png"}
-            alt={project.title}
+            alt={project?.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110 opacity-90"
           />
@@ -91,7 +91,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
           {/* Details Button */}
           <div>
-            <Link href={`/projects/${project.slug}`}>
+            <Link href={`/project/${project.slug}`}>
               <Button
                 size="sm"
                 className="bg-[#6f09b8] flex items-center gap-2 cursor-pointer"

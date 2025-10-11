@@ -12,11 +12,11 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "About Me", href: "about" },
-    { name: "Project", href: "project" },
-    { name: "Skills", href: "skill" },
-    { name: "Blogs", href: "blog" },
-    { name: "Contact", href: "contact" },
+    { name: "About Me", href: "/about" },
+    { name: "Project", href: "/project" },
+    { name: "Skills", href: "/skill" },
+    { name: "Blogs", href: "/blog" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -24,7 +24,7 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#0a021f]/90 via-[#120336]/90 to-[#1a0449]/90 backdrop-blur-xl border-b border-purple-700/30"
+      className="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-[#250b57] to-[#320f70]  backdrop-blur-xl "
     >
       <div className="container mx-auto px-6 md:px-12 flex justify-between items-center h-16 ">
         {/* Logo */}

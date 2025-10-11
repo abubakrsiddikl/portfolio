@@ -29,8 +29,8 @@ export default function BlogCard({ blog }: Props) {
       <Card
         className="
     group relative overflow-hidden
-    bg-gradient-to-br from-[#150a40] via-[#2a0a80] to-[#3a0ad0]
-    border-[4px] border-white/100 rounded-2xl 
+    bg-gradient-to-br from-[#0a021f] via-[#120336] to-[#1a0449] 
+     rounded-sm 
     shadow-[0_0_25px_rgba(109,40,217,0.25)] 
     hover:shadow-[0_0_45px_rgba(109,40,217,0.55)] 
     backdrop-blur-xl 
@@ -41,7 +41,7 @@ export default function BlogCard({ blog }: Props) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#6d28d9_20%,_transparent_60%)] opacity-20 group-hover:opacity-40 transition-opacity duration-700"></div>
 
         {/* Thumbnail */}
-        <div className="relative w-full aspect-[16/12] overflow-hidden rounded-t-2xl border-b border-white/10">
+        <div className="relative w-full aspect-[16/12] overflow-hidden  border-b border-white/10">
           {blog.thumbnail ? (
             <Image
               src={blog.thumbnail}
@@ -90,7 +90,7 @@ export default function BlogCard({ blog }: Props) {
             {blog.tags?.slice(0, 3).map((t) => (
               <span
                 key={t}
-                className="text-xs px-2 py-1 rounded bg-white/30 text-white border border-rounded shadow-2xl hover:cursor-pointer"
+                className="text-xs bg-indigo-500/10 border border-indigo-600/50 text-indigo-300 font-medium px-2.5 py-1 rounded-full cursor-pointer"
               >
                 #{t}
               </span>
@@ -101,9 +101,8 @@ export default function BlogCard({ blog }: Props) {
           <div className="flex items-center justify-between pt-3 border-t border-white/10">
             <div className="text-xs text-gray-400">
               <div>
-                By{" "}
                 <span className="text-gray-200 font-medium line-clamp-1">
-                  {blog.author?.name || "Anonymous"}
+                  Published On
                 </span>
               </div>
               <div className="mt-1">
