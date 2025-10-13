@@ -6,20 +6,34 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import logo from "../../../../public/logo.png";
+import Image from "next/image";
 
 export default function Navbar() {
   const pathname = usePathname();
   const session = useSession();
   console.log(session);
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "About Me", href: "/about" },
-    { name: "Project", href: "/project" },
-    { name: "Skills", href: "/skill" },
-    { name: "Blogs", href: "/blog" },
-    { name: "Contact", href: "/contact" },
+    { name: "Home", href: "/", role: "PUBLIC" },
+    { name: "About Me", href: "/about", role: "PUBLIC" },
+    { name: "Project", href: "/project", role: "PUBLIC" },
+    { name: "Skills", href: "/skill", role: "PUBLIC" },
+    { name: "Blogs", href: "/blog", role: "PUBLIC" },
+    { name: "Contact", href: "/contact", role: "PUBLIC" },
+    { name: "Dashboard", href: "/dashboard", role: "ADMIN" },
   ];
+  const filteredNavLinks = navLinks.filter((link) => {
+    if (link.role === "PUBLIC") {
+      return true;
+    }
+
+    if (link.role === "ADMIN" && session.status === "authenticated") {
+      return true;
+    }
+
+    return false;
+  });
 
   return (
     <motion.header
@@ -42,16 +56,13 @@ export default function Navbar() {
             }}
             className="text-2xl font-extrabold text-purple-400"
           >
-            G
+            <Image src={logo} alt="logo" width={30} height={30} className="rounded"></Image>
           </motion.div>
-          <span className="text-white font-semibold tracking-wider">
-            Gerold
-          </span>
         </Link>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link, index) => {
+          {filteredNavLinks.map((link, index) => {
             const isActive =
               pathname === link.href || pathname.startsWith(`/${link.href}`);
             return (
@@ -80,24 +91,12 @@ export default function Navbar() {
         {/* Hire Me Button */}
         <div className="hidden md:block">
           <motion.div whileHover={{ scale: 1.05 }}>
-            {session.status === "authenticated" ? (
-              <>
-                <Button
-                  onClick={() => signOut()}
-                  className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
-                >
-                  Log Out
+            {!session.data?.user.email && (
+              <Link href={"/login"}>
+                <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
+                  Login
                 </Button>
-              </>
-            ) : (
-              <>
-                {" "}
-                <Link href={"/login"}>
-                  <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
-                    Login
-                  </Button>
-                </Link>
-              </>
+              </Link>
             )}
           </motion.div>
         </div>
