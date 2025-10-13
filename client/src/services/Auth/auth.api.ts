@@ -14,7 +14,6 @@ export const register = async (payload: FieldValues) => {
 // login
 export const login = async (payload: FieldValues) => {
   try {
-    console.log("this api data", payload);
     const res = await apiRequest<ILoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify(payload),

@@ -4,7 +4,6 @@
 @import "swiper/css/pagination";
 @import "swiper/css/autoplay";
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -19,7 +18,6 @@
 
   --animate-fade-glow-once: fade-glow 2s ease-out forwards;
 }
-
 
 @theme inline {
   --color-background: var(--background);
