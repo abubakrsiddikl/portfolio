@@ -6,10 +6,12 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const pathname = usePathname();
-
+  const session = useSession();
+  console.log(session);
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About Me", href: "/about" },
@@ -78,9 +80,25 @@ export default function Navbar() {
         {/* Hire Me Button */}
         <div className="hidden md:block">
           <motion.div whileHover={{ scale: 1.05 }}>
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
-              Hire Me
-            </Button>
+            {session.status === "authenticated" ? (
+              <>
+                <Button
+                  onClick={() => signOut()}
+                  className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
+                >
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <>
+                {" "}
+                <Link href={"/login"}>
+                  <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
+                    Login
+                  </Button>
+                </Link>
+              </>
+            )}
           </motion.div>
         </div>
 

@@ -13,44 +13,45 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
-
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
-type LoginFormValues = {
-  email: string;
-  password: string;
-};
+export const loginFormSchema = z.object({
+  email: z.email().min(2, "Email is required "),
+  password: z
+    .string()
+    .min(2, "Password is required and must be min 6 character"),
+});
 
 export default function LoginForm() {
-  const form = useForm<LoginFormValues>({
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  const router = useRouter();
-  const onSubmit = async (values: LoginFormValues) => {
-  return  console.log(values)
+  const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
-      // const res = await login(values);
-      // if (res.id) {
-      //   toast.success("User Logged in successful");
-      //   router.push("/dashboard");
-      // }
-      signIn("credentials", {
+      const res = await signIn("credentials", {
         ...values,
-        callbackUrl: "/dashboard",
+        callbackUrl: "/",
+        redirect: false,
       });
+      if (res?.error) {
+        toast.error(
+          res.error === "CredentialsSignin"
+            ? "Invalid email or password!"
+            : res.error
+        );
+        return;
+      }
+      toast.success("Login Successful");
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleSocialLogin = (provider: "google" | "github") => {
-    signIn();
   };
 
   return (

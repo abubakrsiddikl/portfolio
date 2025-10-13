@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -16,31 +17,33 @@ import {
 
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import z from "zod";
+import { register } from "@/services";
 
-
-type RegisterFormValues = {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-};
+const registerFormSchema = z.object({
+  name: z.string().min(2, "Name is required "),
+  email: z.email().min(2, "Email is required "),
+  password: z
+    .string()
+    .min(2, "Password is required and must be min 6 character"),
+});
 
 export default function RegisterForm() {
   const router = useRouter();
-  const form = useForm<RegisterFormValues>({
+  const form = useForm<z.infer<typeof registerFormSchema>>({
+    resolver: zodResolver(registerFormSchema),
     defaultValues: {
       name: "",
       email: "",
-      phone: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: RegisterFormValues) => {
+  const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     try {
-      return  console.log(values)
-      const res = "";
-      if (res) {
+      const res = await register(values);
+      console.log(res);
+      if (res.data.email) {
         toast.success("User register successful");
         router.push("/login");
       }
@@ -84,20 +87,6 @@ export default function RegisterForm() {
                     placeholder="Enter your email"
                     {...field}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {/* Phone */}
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your phone number" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

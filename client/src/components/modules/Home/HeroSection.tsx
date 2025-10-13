@@ -10,7 +10,7 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden">
       {/* Background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#6d28d9_40%,_transparent_100%)] opacity-30 animate-pulse"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#6d28d9_40%,_transparent_100%)] opacity-30 --animate-fade-glow-once"></div>
 
       <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
         {/* Left Content */}
