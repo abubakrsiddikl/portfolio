@@ -21,3 +21,16 @@ export interface Author {
   name: string;
   email: string;
 }
+
+export interface CreateProjectInput {
+  title: string;
+  description: string;
+  category?: string | undefined;
+  features?: string | undefined;
+  technologies?: string | undefined;
+  githubFrontend?: string | undefined;
+  githubBackend?: string | undefined;
+  liveLink?: string | undefined;
+  isFeatured?: boolean | undefined;
+  isPublished?: boolean | undefined;
+}

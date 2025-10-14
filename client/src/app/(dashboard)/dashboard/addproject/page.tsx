@@ -1,7 +1,11 @@
+"use client"
+import AddProjectModal from "@/components/modules/Projects/Modal/AddProjectModal";
 
 
 export default function AddProjectPage() {
   return (
-    <div>AddProjectPage</div>
+    <div>
+      <AddProjectModal></AddProjectModal>
+    </div>
   )
 }

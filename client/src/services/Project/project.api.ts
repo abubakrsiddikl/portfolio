@@ -1,5 +1,6 @@
+
 import { apiRequest } from "../apiClient";
-import { IProject } from "./project.type";
+import {  IProject } from "./project.type";
 
 export const getAllProjects = async (): Promise<IProject[]> => {
   const res = await apiRequest<IProject[]>("/project?limit=10");
@@ -14,4 +15,14 @@ export const getAllRecentProject = async (): Promise<IProject[]> => {
 export const getProjectBySlug = async (slug: string): Promise<IProject> => {
   const res = await apiRequest<IProject>(`/project/${slug}`);
   return res.data;
+};
+
+
+export const addNewProject = async(payload:FormData)=>{
+  console.log("this project payload",payload)
+  const res = await apiRequest("/project/create",{
+    method: "POST",
+    body: payload
+  });
+  return res
 };

@@ -1,15 +1,23 @@
 import { env } from "@/config/env";
 import { IErrorResponse, IResponse } from "@/types";
+import { toast } from "sonner";
 
 export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<IResponse<T>> {
+  const defaultHeaders: HeadersInit = {
+    ...(options?.body instanceof FormData
+      ? {}
+      : { "Content-Type": "application/json" }),
+  };
   try {
     const response = await fetch(`${env.baseUrl}${endpoint}`, {
       headers: {
-        "Content-Type": "application/json",
+        ...defaultHeaders,
+        ...options?.headers,
       },
+      credentials: "include",
       ...options,
     });
 
@@ -28,17 +36,17 @@ export async function apiRequest<T>(
       throw error;
     }
 
-    // ✅ Success return as typed data
+    // Success return as typed data
     return data as IResponse<T>;
   } catch (error: unknown) {
     console.error("API Error:", error);
 
-    // ✅ Ensure type safety for unknown errors
+    //  Ensure type safety for unknown errors
     if (typeof error === "object" && error && "message" in error) {
-      throw error as IErrorResponse;
+      toast.error(`${error.message}`);
     }
 
-    // ✅ Fallback
+    //  Fallback
     throw {
       success: false,
       message: "Unexpected error occurred",
