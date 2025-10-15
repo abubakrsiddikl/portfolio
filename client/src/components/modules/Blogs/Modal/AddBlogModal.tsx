@@ -27,12 +27,13 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import SingleImageUploader from "@/components/SingleImageUploader";
+import { toast } from "sonner";
+import { addNewBlog } from "@/services";
 
 //  Zod Schema
 const blogSchema = z.object({
   title: z.string().min(3, "Title is required"),
   content: z.string().min(10, "Content is required"),
-  thumbnail: z.string().min(2, "Thumbnail must be a valid URL"),
   category: z.string().min(2, "Category is required"),
   tags: z.string().min(1, "At least one tag required"),
   isPublished: z.boolean().catch(false),
@@ -51,7 +52,6 @@ export default function AddBlogModal() {
     defaultValues: {
       title: "",
       content: "",
-      thumbnail: "",
       category: "",
       tags: "",
       isPublished: false,
@@ -59,10 +59,27 @@ export default function AddBlogModal() {
     },
   });
 
-  const onSubmit = (values: BlogFormValues) => {
+  const onSubmit = async (values: BlogFormValues) => {
+    if (!image) {
+      toast.error("Please select a thumbnail image.");
+      return;
+    }
     // Convert tags from comma-separated string → array
     const tagsArray = values.tags.split(",").map((t) => t.trim());
     console.log({ ...values, tags: tagsArray });
+    const payload = {
+      ...values,
+      tags: tagsArray,
+      isFeatured: values.isFeatured,
+      isPublished: values.isPublished,
+    };
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
+    formData.append("file", image as File);
+    const res = await addNewBlog(formData);
+    if (res.success) {
+      toast.success("Blog Post Successfully Complete");
+    }
     setOpen(false);
   };
 

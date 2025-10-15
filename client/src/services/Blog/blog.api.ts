@@ -8,6 +8,15 @@ export const getAllBlogs = async (): Promise<IBlog[]> => {
 };
 
 export const getAllRecentBlog = async (): Promise<IBlog[]> => {
-  const res = await apiRequest<IBlog[]>("/blog?limit=3");
+  const res = await apiRequest<IBlog[]>("/blog?limit=3",);
   return res.data;
+};
+
+
+export const addNewBlog = async(payload:FormData)=>{
+  const res = await apiRequest("/blog/create",{
+    method: "POST",
+    body: payload
+  });
+  return res
 };
