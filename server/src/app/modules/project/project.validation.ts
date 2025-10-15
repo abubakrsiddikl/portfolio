@@ -11,7 +11,7 @@ export const createProjectZodSchema = z.object({
   githubBackend: z.string().optional(),
   liveLink: z.string().optional(),
   category: z.string().optional(),
-  isFeatured: z.boolean().optional(),
+  isFeatured: z.string().optional(),
   deleteImages: z.array(z.string()).optional(),
 });
 

@@ -20,6 +20,7 @@ passport.use(
           return done("User does not exist");
         }
 
+
         if (
           isUserExist.isActive === IsActive.BLOCKED ||
           isUserExist.isActive === IsActive.INACTIVE
