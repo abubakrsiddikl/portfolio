@@ -27,12 +27,12 @@ import { addNewProject } from "@/services";
 const createProjectSchema = z.object({
   title: z.string().min(3, "Title is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  category: z.string().optional(),
-  features: z.string().optional(),
-  technologies: z.string().optional(),
-  githubFrontend: z.string().optional(),
-  githubBackend: z.string().optional(),
-  liveLink: z.string().optional(),
+  category: z.string().min(2, "Category is required"),
+  features: z.string().min(2, "Features is required"),
+  technologies: z.string().min(2, "Technologies is required"),
+  githubFrontend: z.string().min(2, "Github Frontend url is required"),
+  githubBackend: z.string().min(2, "Github Backend url is required"),
+  liveLink: z.string().min(2, "Live Site url is required"),
   isFeatured: z.boolean().optional(),
   isPublished: z.boolean().optional(),
 });
@@ -108,10 +108,10 @@ export default function AddProjectModal() {
         console.log(key, value);
       }
       // Send request
-      const response = await addNewProject(formData);
-
-      toast.success("✅ Project added successfully!");
-      console.log("Server Response:", response);
+      const res = await addNewProject(formData);
+      if (res.success) {
+        toast.success("✅ Project added successfully!");
+      }
 
       form.reset();
       setImages([]);
@@ -194,6 +194,11 @@ export default function AddProjectModal() {
                 placeholder="Next.js, Tailwind"
                 className="mt-1"
               />
+              {form.formState.errors.title && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.technologies?.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -206,6 +211,11 @@ export default function AddProjectModal() {
                 placeholder="https://github.com/frontend"
                 className="mt-1"
               />
+              {form.formState.errors.title && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.githubFrontend?.message}
+                </p>
+              )}
             </div>
             <div>
               <Label>GitHub Backend</Label>
@@ -214,6 +224,11 @@ export default function AddProjectModal() {
                 placeholder="https://github.com/backend"
                 className="mt-1"
               />
+              {form.formState.errors.title && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.githubBackend?.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -226,6 +241,11 @@ export default function AddProjectModal() {
                 placeholder="feature1, feature2, feature3"
                 className="mt-1"
               />
+              {form.formState.errors.title && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.features?.message}
+                </p>
+              )}
             </div>
             <div>
               <Label>Live Link</Label>
@@ -234,6 +254,11 @@ export default function AddProjectModal() {
                 placeholder="https://live-site.com"
                 className="mt-1"
               />
+              {form.formState.errors.title && (
+                <p className="text-red-500 text-sm">
+                  {form.formState.errors.liveLink?.message}
+                </p>
+              )}
             </div>
           </div>
           {/* Image Upload*/}
