@@ -25,12 +25,13 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Edit } from "lucide-react";
 import SingleImageUploader from "@/components/SingleImageUploader";
 import { toast } from "sonner";
-import { addNewBlog } from "@/services";
 
-//  Zod Schema
+import { IBlog, updateBlog } from "@/services";
+
+// Zod Schema
 const blogSchema = z.object({
   title: z.string().min(3, "Title is required"),
   content: z.string().min(10, "Content is required"),
@@ -43,60 +44,87 @@ const blogSchema = z.object({
 // Infer type
 type BlogFormValues = z.infer<typeof blogSchema>;
 
-export default function AddBlogModal() {
+interface UpdateBlogModalProps {
+  blogData: IBlog;
+}
+
+export default function UpdateBlogModal({ blogData }: UpdateBlogModalProps) {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
+
+  const [newImageFile, setNewImageFile] = useState<File | null>(null);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      category: "",
-      tags: "",
-      isPublished: false,
-      isFeatured: false,
+      title: blogData?.title || "",
+      content: blogData?.content || "",
+      category: blogData?.category || "",
+
+      tags: blogData?.tags ? blogData.tags.join(", ") : "",
+      isPublished: blogData?.isPublished ?? false,
+      isFeatured: blogData?.isFeatured ?? false,
     },
   });
 
   const onSubmit = async (values: BlogFormValues) => {
-    if (!image) {
-      toast.error("Please select a thumbnail image.");
-      return;
-    }
-    // Convert tags from comma-separated string → array
+    setIsLoading(true);
+
     const tagsArray = values.tags.split(",").map((t) => t.trim());
+
     const payload = {
       ...values,
       tags: tagsArray,
-      isFeatured: values.isFeatured,
-      isPublished: values.isPublished,
+
+      blogId: blogData._id,
+
+      existingPublicId: newImageFile ? undefined : blogData.thumbnail,
     };
+
     const formData = new FormData();
+
     formData.append("data", JSON.stringify(payload));
-    formData.append("file", image as File);
-    const res = await addNewBlog(formData);
-    if (res.success) {
-      toast.success("✅ Blog Post Successfully Complete");
+
+    if (newImageFile) {
+      formData.append("file", newImageFile);
     }
-    setOpen(false);
+
+    try {
+      const res = await updateBlog(blogData._id, formData);
+
+      if (res.success) {
+        toast.success("✅ Blog Post Successfully Updated!");
+
+        form.reset(values);
+        setOpen(false);
+      } else {
+        toast.error(res.message || "Update Failed.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2 bg-gradient-to-r from-purple-700 to-indigo-600 text-white cursor-pointer">
-          <Plus size={16} /> Add Project
+        <Button
+          variant="outline"
+          size="icon"
+          className="text-indigo-600 hover:text-indigo-800"
+        >
+          <Edit size={16} />
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-lg rounded-2xl shadow-2xl p-6 my-5">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
-            Add New Blog
+            Update Blog: {blogData?.title}
           </DialogTitle>
           <DialogDescription className="text-gray-300 text-center">
-            Fill the form below to create a new blog post.
+            Edit the fields below to update the blog post.
           </DialogDescription>
         </DialogHeader>
 
@@ -139,8 +167,10 @@ export default function AddBlogModal() {
               )}
             />
 
-            {/* Thumbnail */}
-            <SingleImageUploader onChange={setImage}></SingleImageUploader>
+            <SingleImageUploader
+              onChange={setNewImageFile}
+              initialImage={blogData.thumbnail}
+            />
 
             {/* Category */}
             <FormField
@@ -212,11 +242,13 @@ export default function AddBlogModal() {
 
             <Button
               type="submit"
+              disabled={isLoading}
               className={cn(
-                "w-full mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:opacity-90"
+                "w-full mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:opacity-90",
+                isLoading && "opacity-70 cursor-not-allowed"
               )}
             >
-              Submit Blog
+              {isLoading ? "Updating..." : "Update Blog"}
             </Button>
           </form>
         </Form>

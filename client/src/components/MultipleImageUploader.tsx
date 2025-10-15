@@ -1,16 +1,18 @@
 import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react";
-
 import { FileMetadata, useFileUpload } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
-import { Dispatch, useEffect } from "react";
+import { Dispatch, useEffect, useState } from "react";
 
-export default function MultipleImageUploader({
-  onChange,
-}: {
-  onChange: Dispatch<React.SetStateAction<[] | (File | FileMetadata)[]>>;
-}) {
+interface Props {
+  onChange: Dispatch<React.SetStateAction<(File | FileMetadata)[]>>;
+  initialFiles?: FileMetadata[];
+}
+
+export default function MultipleImageUploader({ onChange, initialFiles = [] }: Props) {
+  const [existingImages, setExistingImages] = useState<FileMetadata[]>(initialFiles);
+
   const maxSizeMB = 5;
-  const maxSize = maxSizeMB * 1024 * 1024; // 5MB default
+  const maxSize = maxSizeMB * 1024 * 1024;
   const maxFiles = 3;
 
   const [
@@ -31,54 +33,75 @@ export default function MultipleImageUploader({
     maxFiles,
   });
 
+  // যখনই কিছু পরিবর্তন হবে, সব image parent এ পাঠানো হবে
   useEffect(() => {
-    if (files.length > 0) {
-      const imageList = files.map((item) => item.file);
-      onChange(imageList);
-    } else {
-      onChange([]);
-    }
-  }, [files]);
+    const imageList: (File | FileMetadata)[] = [
+      ...existingImages,
+      ...files.map((item) => item.file),
+    ];
+    onChange(imageList);
+  }, [existingImages, files]);
+
+  const handleRemoveExisting = (url: string) => {
+    setExistingImages((prev) => prev.filter((img) => img.url !== url));
+  };
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Drop area */}
       <div
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         data-dragging={isDragging || undefined}
-        data-files={files.length > 0 || undefined}
-        className="border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center has-[input:focus]:ring-[3px]"
+        data-files={files.length > 0 || existingImages.length > 0 || undefined}
+        className="border-input data-[dragging=true]:bg-accent/50 relative flex min-h-52 flex-col items-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors not-data-[files]:justify-center"
       >
-        <input
-          {...getInputProps()}
-          className="sr-only"
-          aria-label="Upload image file"
-        />
-        {files.length > 0 ? (
+        <input {...getInputProps()} className="sr-only" aria-label="Upload image file" />
+
+        {existingImages.length > 0 || files.length > 0 ? (
           <div className="flex w-full flex-col gap-3">
             <div className="flex items-center justify-between gap-2">
               <h3 className="truncate text-sm font-medium">
-                Uploaded Files ({files.length})
+                Uploaded Files ({existingImages.length + files.length})
               </h3>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={openFileDialog}
-                disabled={files.length >= maxFiles}
+                disabled={existingImages.length + files.length >= maxFiles}
                 type="button"
               >
-                <UploadIcon
-                  className="-ms-0.5 size-3.5 opacity-60"
-                  aria-hidden="true"
-                />
+                <UploadIcon className="-ms-0.5 size-3.5 opacity-60" />
                 Add more
               </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              {/* Existing images */}
+              {existingImages.map((img) => (
+                <div
+                  key={img.url}
+                  className="bg-accent relative aspect-square rounded-md"
+                >
+                  <img
+                    src={img.url}
+                    alt={img.name}
+                    className="size-full rounded-[inherit] object-cover"
+                  />
+                  <Button
+                    onClick={() => handleRemoveExisting(img.url)}
+                    size="icon"
+                    className="absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none border-background focus-visible:border-background"
+                    aria-label="Remove image"
+                    type="button"
+                  >
+                    <XIcon className="size-3.5" />
+                  </Button>
+                </div>
+              ))}
+
+              {/* New uploaded files */}
               {files.map((file) => (
                 <div
                   key={file.id}
@@ -92,7 +115,7 @@ export default function MultipleImageUploader({
                   <Button
                     onClick={() => removeFile(file.id)}
                     size="icon"
-                    className="border-background focus-visible:border-background absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none"
+                    className="absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none border-background focus-visible:border-background"
                     aria-label="Remove image"
                     type="button"
                   >
@@ -104,23 +127,15 @@ export default function MultipleImageUploader({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-            <div
-              className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
-              aria-hidden="true"
-            >
+            <div className="bg-background mb-2 flex size-11 items-center justify-center rounded-full border">
               <ImageIcon className="size-4 opacity-60" />
             </div>
             <p className="mb-1.5 text-sm font-medium">Drop your images here</p>
             <p className="text-muted-foreground text-xs">
               SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              className="mt-4"
-              onClick={openFileDialog}
-            >
-              <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
+            <Button type="button" variant="outline" className="mt-4" onClick={openFileDialog}>
+              <UploadIcon className="-ms-1 opacity-60" />
               Select images
             </Button>
           </div>
@@ -128,10 +143,7 @@ export default function MultipleImageUploader({
       </div>
 
       {errors.length > 0 && (
-        <div
-          className="text-destructive flex items-center gap-1 text-xs"
-          role="alert"
-        >
+        <div className="text-destructive flex items-center gap-1 text-xs" role="alert">
           <AlertCircleIcon className="size-3 shrink-0" />
           <span>{errors[0]}</span>
         </div>

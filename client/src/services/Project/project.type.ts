@@ -15,6 +15,7 @@ export interface IProject {
   createdAt: string;
   updatedAt: string;
   slug: string;
+  deleteImages?: string[];
 }
 
 export interface Author {

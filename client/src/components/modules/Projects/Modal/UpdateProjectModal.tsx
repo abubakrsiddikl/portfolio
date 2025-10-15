@@ -18,13 +18,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Edit } from "lucide-react";
 import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { FileMetadata } from "@/hooks/use-file-upload";
-import { addNewProject } from "@/services";
 
-//  Zod Schema
-const createProjectSchema = z.object({
+import { IProject, updateProject } from "@/services";
+
+// Zod Schema
+const updateProjectSchema = z.object({
   title: z.string().min(3, "Title is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   category: z.string().min(2, "Category is required"),
@@ -37,83 +38,101 @@ const createProjectSchema = z.object({
   isPublished: z.boolean().optional(),
 });
 
-export type CreateProjectInput = z.infer<typeof createProjectSchema>;
+export type UpdateProjectInput = z.infer<typeof updateProjectSchema>;
 
-export default function AddProjectModal() {
+interface UpdateProjectModalProps {
+  projectData: IProject;
+  onUpdateSuccess?: () => void;
+}
+
+export default function UpdateProjectModal({
+  projectData,
+}: UpdateProjectModalProps) {
   const [open, setOpen] = useState(false);
-  const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
-  //  Setup form
-  const form = useForm<CreateProjectInput>({
-    resolver: zodResolver(createProjectSchema),
+
+  const initialImages: FileMetadata[] = projectData.projectImages.map(
+    (url) => ({
+      url: url,
+      name: url.substring(url.lastIndexOf("/") + 1),
+    })
+  );
+
+  const [images, setImages] = useState<(File | FileMetadata)[]>(initialImages);
+
+  // Setup form
+  const form = useForm<UpdateProjectInput>({
+    resolver: zodResolver(updateProjectSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      category: "",
-      features: "",
-      technologies: "",
-      githubFrontend: "",
-      githubBackend: "",
-      liveLink: "",
-      isFeatured: false,
-      isPublished: true,
+      title: projectData.title || "",
+      description: projectData.description || "",
+      category: projectData.category || "",
+
+      features: projectData.features ? projectData.features.join(", ") : "",
+      technologies: projectData.technologies
+        ? projectData.technologies.join(", ")
+        : "",
+      githubFrontend: projectData.githubFrontend || "",
+      githubBackend: projectData.githubBackend || "",
+      liveLink: projectData.liveLink || "",
+      isFeatured: projectData.isFeatured ?? "false",
+      isPublished: projectData.isPublished ?? "true",
     },
   });
 
-  //  Handle submit
-  const onSubmit = async (values: CreateProjectInput) => {
+  // Handle submit
+  const onSubmit = async (values: UpdateProjectInput) => {
     try {
-      // Convert comma separated string -> array
       const featuresArr = values.features
-        ? values.features
-            .toString()
-            .split(",")
-            .map((f) => f.trim())
-        : [];
+        .split(",")
+        .map((f) => f.trim())
+        .filter((f) => f.length > 0);
 
       const technologiesArr = values.technologies
-        ? values.technologies.split(",").map((t) => t.trim())
-        : [];
-      // Create FormData
+        .split(",")
+        .map((t) => t.trim())
+        .filter((t) => t.length > 0);
+
       const formData = new FormData();
 
-      // Append text fields
-      formData.append("title", values.title);
-      formData.append("description", values.description);
-      if (values.category) formData.append("category", values.category);
-      formData.append("isFeatured", String(values.isFeatured || false));
-      formData.append("isPublished", String(values.isPublished || false));
+      const { filesToUpload, existingImageUrls } = images.reduce(
+        (acc, file) => {
+          if (file instanceof File) acc.filesToUpload.push(file);
+          else if ("url" in file) acc.existingImageUrls.push(file.url);
+          return acc;
+        },
+        { filesToUpload: [] as File[], existingImageUrls: [] as string[] }
+      );
+      
 
-      if (values.githubFrontend)
-        formData.append("githubFrontend", values.githubFrontend);
-      if (values.githubBackend)
-        formData.append("githubBackend", values.githubBackend);
-      if (values.liveLink) formData.append("liveLink", values.liveLink);
+      const deletedImageUrls = projectData.projectImages.filter(
+        (url) => !existingImageUrls.includes(url)
+      );
 
-      // Append arrays (backend should handle array parsing)
-      featuresArr.forEach((f) => formData.append("features[]", f));
-      technologiesArr.forEach((t) => formData.append("technologies[]", t));
-      // Append images
-      if (images && images.length > 0) {
-        images.forEach((file) => {
-          if (file instanceof File) {
-            formData.append("files", file);
-          } else if ("url" in file) {
-            // already uploaded (metadata type)
-            formData.append("existingImages[]", file.url);
-          }
-        });
-      }
-      // Send request
-      const res = await addNewProject(formData);
+      const payload = {
+        ...values,
+
+        features: featuresArr,
+        technologies: technologiesArr,
+
+        deleteImages: deletedImageUrls,
+      };
+
+      formData.append("data", JSON.stringify(payload));
+
+      filesToUpload.forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const res = await updateProject(projectData._id, formData);
+      console.log(res);
       if (res.success) {
-        toast.success("✅ Project added successfully!");
+        toast.success("✅ Project updated successfully!");
       }
 
-      form.reset();
-      setImages([]);
       setOpen(false);
     } catch (error) {
-      console.error("Error adding project:", error);
+      console.error("Error updating project:", error);
+      toast.error("An unexpected error occurred.");
     }
   };
 
@@ -121,8 +140,12 @@ export default function AddProjectModal() {
     <Dialog open={open} onOpenChange={setOpen}>
       {/* Button to open modal */}
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2 bg-gradient-to-r from-purple-700 to-indigo-600 text-white cursor-pointer">
-          <Plus size={16} /> Add Project
+        <Button
+          variant="outline"
+          size="icon"
+          className="text-indigo-600 hover:text-indigo-800"
+        >
+          <Edit size={16} />
         </Button>
       </DialogTrigger>
 
@@ -130,10 +153,10 @@ export default function AddProjectModal() {
       <DialogContent className="max-w-lg w-full rounded-xl p-6 my-5">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Add New Project
+            Update Project: {projectData.title}
           </DialogTitle>
           <DialogDescription>
-            Fill in the basic details for your project.
+            Edit the details to update your project.
           </DialogDescription>
         </DialogHeader>
 
@@ -184,15 +207,15 @@ export default function AddProjectModal() {
               />
             </div>
             <div>
-              <Label>Technologies</Label>
+              <Label>Technologies (comma separated)</Label>
               <Input
                 {...form.register("technologies")}
                 placeholder="Next.js, Tailwind"
                 className="mt-1"
               />
-              {form.formState.errors.title && (
+              {form.formState.errors.technologies && (
                 <p className="text-red-500 text-sm">
-                  {form.formState.errors.technologies?.message}
+                  {form.formState.errors.technologies.message}
                 </p>
               )}
             </div>
@@ -207,9 +230,9 @@ export default function AddProjectModal() {
                 placeholder="https://github.com/frontend"
                 className="mt-1"
               />
-              {form.formState.errors.title && (
+              {form.formState.errors.githubFrontend && (
                 <p className="text-red-500 text-sm">
-                  {form.formState.errors.githubFrontend?.message}
+                  {form.formState.errors.githubFrontend.message}
                 </p>
               )}
             </div>
@@ -220,9 +243,9 @@ export default function AddProjectModal() {
                 placeholder="https://github.com/backend"
                 className="mt-1"
               />
-              {form.formState.errors.title && (
+              {form.formState.errors.githubBackend && (
                 <p className="text-red-500 text-sm">
-                  {form.formState.errors.githubBackend?.message}
+                  {form.formState.errors.githubBackend.message}
                 </p>
               )}
             </div>
@@ -231,15 +254,15 @@ export default function AddProjectModal() {
           {/* Live Link and Features */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label>Features</Label>
+              <Label>Features (comma separated)</Label>
               <Input
                 {...form.register("features")}
                 placeholder="feature1, feature2, feature3"
                 className="mt-1"
               />
-              {form.formState.errors.title && (
+              {form.formState.errors.features && (
                 <p className="text-red-500 text-sm">
-                  {form.formState.errors.features?.message}
+                  {form.formState.errors.features.message}
                 </p>
               )}
             </div>
@@ -250,17 +273,21 @@ export default function AddProjectModal() {
                 placeholder="https://live-site.com"
                 className="mt-1"
               />
-              {form.formState.errors.title && (
+              {form.formState.errors.liveLink && (
                 <p className="text-red-500 text-sm">
-                  {form.formState.errors.liveLink?.message}
+                  {form.formState.errors.liveLink.message}
                 </p>
               )}
             </div>
           </div>
+
           {/* Image Upload*/}
           <div>
             <Label>Project Images</Label>
-            <MultipleImageUploader onChange={setImages}></MultipleImageUploader>
+            <MultipleImageUploader
+              onChange={setImages}
+              initialFiles={initialImages}
+            />
           </div>
 
           {/* Checkboxes */}
@@ -297,9 +324,10 @@ export default function AddProjectModal() {
             </Button>
             <Button
               type="submit"
+              disabled={form.formState.isSubmitting}
               className="bg-purple-700 hover:bg-purple-800 text-white"
             >
-              Add Project
+              {form.formState.isSubmitting ? "Updating..." : "Update Project"}
             </Button>
           </DialogFooter>
         </form>

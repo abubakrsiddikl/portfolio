@@ -1,10 +1,20 @@
-import AddBlogModal from '@/components/modules/Blogs/Modal/AddBlogModal'
-import React from 'react'
+import AddBlogModal from "@/components/modules/Blogs/Modal/AddBlogModal";
+import BlogTable from "@/components/modules/Blogs/Table/BlogTable";
+import { getAllBlogs } from "@/services";
 
-export default function AddBlogPage() {
+
+export default async function AddBlogPage() {
+  const blogs = await getAllBlogs();
   return (
     <div>
-      <AddBlogModal></AddBlogModal>
+      {/* add blog modal */}
+      <div className="flex justify-end items-center mb-5">
+        <AddBlogModal></AddBlogModal>
+      </div>
+      {/* blog table */}
+      <div>
+        <BlogTable blogs={blogs || []}></BlogTable>
+      </div>
     </div>
-  )
+  );
 }
