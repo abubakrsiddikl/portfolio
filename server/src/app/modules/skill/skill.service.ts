@@ -1,5 +1,7 @@
 import { Skill } from "./skill.model";
 import { ISkill } from "./skill.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { deleteImageFromCLoudinary } from "../../config/cloudinary.config";
 
 const createSkill = async (payload: ISkill) => {
   const result = await Skill.create(payload);
@@ -7,13 +9,20 @@ const createSkill = async (payload: ISkill) => {
 };
 
 const getAllSkills = async (query: Record<string, string>) => {
-  const { category, level } = query;
-  const filter: Record<string, string> = {};
-  if (category) filter.category = category;
-  if (level) filter.level = level;
+  const queryBuilder = new QueryBuilder(Skill.find(), query);
 
-  const result = await Skill.find(filter).sort({ createdAt: -1 });
-  return { data: result };
+  const projects = queryBuilder.search(["name"]).filter().sort().paginate();
+
+  // const meta = await queryBuilder.getMeta();
+  const [data, meta] = await Promise.all([
+    projects.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
 };
 
 const getSingleSkill = async (id: string) => {
@@ -22,7 +31,17 @@ const getSingleSkill = async (id: string) => {
 };
 
 const updateSkill = async (id: string, payload: Partial<ISkill>) => {
-  const updatedSkill = await Skill.findByIdAndUpdate(id, payload, { new: true });
+  const existingSkill = await Skill.findById(id);
+  if (!existingSkill) {
+    throw new Error("Blog not found");
+  }
+
+  if (payload.icon && existingSkill.icon) {
+    await deleteImageFromCLoudinary(existingSkill.icon);
+  }
+  const updatedSkill = await Skill.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
   return { data: updatedSkill };
 };
 

@@ -3,7 +3,6 @@ import httpStatus from "http-status-codes";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { SkillServices } from "./skill.service";
-import { ISkill } from "./skill.interface";
 
 const createSkill = catchAsync(async (req: Request, res: Response) => {
   const payload = {
@@ -31,6 +30,7 @@ const getAllSkills = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     message: "Skills retrieved successfully",
     data: result.data,
+    meta: result.meta,
   });
 });
 
@@ -48,7 +48,9 @@ const getSingleSkill = catchAsync(async (req: Request, res: Response) => {
 
 const updateSkill = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const payload: Partial<ISkill> = req.body;
+  const icon = req?.file?.path;
+  const payload = req.file ? { ...req.body, icon } : { ...req.body };
+
   const result = await SkillServices.updateSkill(id, payload);
 
   sendResponse(res, {

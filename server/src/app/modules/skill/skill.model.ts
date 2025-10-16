@@ -9,7 +9,7 @@ const skillSchema = new Schema<ISkill>(
       enum: Object.values(SKILL_LEVEL),
       required: true,
     },
-    category: { type: String, required: true },
+    category: { type: String, default: "Tec" },
     icon: { type: String },
     description: { type: String },
   },
