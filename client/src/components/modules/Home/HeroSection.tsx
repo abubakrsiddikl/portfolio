@@ -9,6 +9,7 @@ import profileImage from "../../../../public/profile.jpeg";
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden">
+      {/* className="relative min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden" */}
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#6d28d9_40%,_transparent_100%)] opacity-30 --animate-fade-glow-once"></div>
 
@@ -58,17 +59,24 @@ export default function HeroSection() {
             </motion.div>
 
             <div className="flex gap-4">
-              {[Github, Linkedin, Facebook].map((Icon, i) => (
-                <motion.a
-                  key={i}
-                  href="#"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="hover:text-purple-400 transition"
-                >
-                  <Icon size={22} />
-                </motion.a>
-              ))}
+              <motion.a
+                href="https://github.com/abubakrsiddikl"
+                target="_blank"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.95 }}
+                className="hover:text-purple-400 transition"
+              >
+                <Github size={22} />
+              </motion.a>
+              <motion.a
+                href="https://www.linkedin.com/in/abubakrsiddik-dev/"
+                target="_blank"
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.95 }}
+                className="hover:text-purple-400 transition"
+              >
+                <Linkedin size={22} />
+              </motion.a>
             </div>
           </div>
         </motion.div>

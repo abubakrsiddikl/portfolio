@@ -7,7 +7,7 @@ export const getAllProjects = async (): Promise<IProject[]> => {
   return res.data;
 };
 
-export const getAllRecentProject = async (): Promise<IProject[]> => {
+export const getAllRecentProjects = async (): Promise<IProject[]> => {
   const res = await apiRequest<IProject[]>("/project?limit=3");
   return res.data;
 };
