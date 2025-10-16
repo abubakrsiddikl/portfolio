@@ -32,6 +32,10 @@ const data = {
           url: "/dashboard/addblog",
         },
         {
+          title: "Add Skill",
+          url: "/dashboard/addskill",
+        },
+        {
           title: "Logout",
           url: "/dashboard/logout",
         },
@@ -42,7 +46,6 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <Sidebar {...props}>
       {/* logo */}

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Facebook, Download } from "lucide-react";
+import { Github, Linkedin, Download } from "lucide-react";
 import profileImage from "../../../../public/profile.jpeg";
 
 export default function HeroSection() {
