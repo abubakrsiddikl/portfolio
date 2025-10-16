@@ -13,7 +13,6 @@ const createProject = catchAsync(async (req: Request, res: Response) => {
       (file) => file.path
     ),
   };
-  console.log("this is controller",payload)
   const decodedToken = req.user as JwtPayload;
   const result = await ProjectServices.createProject(payload, decodedToken);
   sendResponse(res, {
@@ -58,6 +57,7 @@ const updateProject = catchAsync(async (req: Request, res: Response) => {
         ),
       }
     : { ...req.body };
+  console.log(payload)
   const result = await ProjectServices.updateProject(id, payload);
   sendResponse(res, {
     success: true,

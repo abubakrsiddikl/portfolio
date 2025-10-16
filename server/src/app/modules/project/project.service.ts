@@ -95,8 +95,10 @@ const updateProject = async (id: string, payload: Partial<IProject>) => {
 };
 
 const deleteProject = async (id: string) => {
-  const deleted = await Project.findByIdAndDelete(id);
-  return { data: deleted };
+  const deletedProject = await Project.findByIdAndDelete(id);
+  // delete image from cloudinary
+  deletedProject?.projectImages?.map((img) => deleteImageFromCLoudinary(img));
+  return { data: deletedProject };
 };
 
 export const ProjectServices = {

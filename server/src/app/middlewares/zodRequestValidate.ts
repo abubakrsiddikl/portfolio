@@ -10,8 +10,6 @@ export const zodRequestValidate =
       if (req.body.data) {
         req.body = JSON.parse(req.body.data);
       }
-      console.log("req body zod",req.body)
-      console.log("req body data zod",req.body.data)
       req.body = await zodSchema.parseAsync(req.body);
       next();
     } catch (error) {

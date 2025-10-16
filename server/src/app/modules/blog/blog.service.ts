@@ -3,6 +3,8 @@ import { IBlog } from "./blog.interface";
 import { JwtPayload } from "jsonwebtoken";
 import { deleteImageFromCLoudinary } from "../../config/cloudinary.config";
 import { QueryBuilder } from "../../utils/QueryBuilder";
+import AppError from "../../errorHelpers/AppError";
+import httpStatus from "http-status-codes";
 
 //  Create Blog
 const createBlog = async (payload: IBlog, decodedToken: JwtPayload) => {
@@ -64,8 +66,12 @@ const updateBlog = async (id: string, payload: Partial<IBlog>) => {
 };
 //  Delete Blog (Owner Only)
 const deleteBlog = async (id: string) => {
-  const deleted = await Blog.findByIdAndDelete(id);
-  return { data: deleted };
+  const deletedBlog = await Blog.findByIdAndDelete(id);
+  if (!deletedBlog) {
+    throw new AppError(httpStatus.NOT_FOUND, "Blog Not Found !");
+  }
+  await deleteImageFromCLoudinary(deletedBlog.thumbnail as string);
+  return { data: deletedBlog };
 };
 
 export const BlogServices = {
