@@ -3,11 +3,13 @@ import { IBlog } from "./blog.type";
 
 // get all blog
 export const getAllBlogs = async (): Promise<IBlog[]> => {
-  const res = await apiRequest<IBlog[]>("/blog",{
-    next: {
-      revalidate: 30
-    }
-  });
+  const res = await apiRequest<IBlog[]>("/blog?limit=10");
+  return res.data;
+};
+
+// get blog by slug
+export const getBlogBySlug = async (slug: string) => {
+  const res = await apiRequest<IBlog>(`/blog/${slug}`);
   return res.data;
 };
 
@@ -33,8 +35,8 @@ export const deleteBlog = async (id: string) => {
   return res;
 };
 
-// update blog 
-export const updateBlog = async(id:string, payload: FormData)=>{
+// update blog
+export const updateBlog = async (id: string, payload: FormData) => {
   const res = await apiRequest(`/blog/update/${id}`, {
     method: "PATCH",
     body: payload,

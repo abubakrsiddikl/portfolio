@@ -110,7 +110,7 @@ export default function BlogCard({ blog }: Props) {
               </div>
             </div>
 
-            <Link href={`/blogs/${blog.slug}`}>
+            <Link href={`/blog/${blog.slug}`}>
               <Button size="sm" className="bg-[#6f09b8] ">
                 Read More..
               </Button>

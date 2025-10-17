@@ -50,12 +50,14 @@ export default function UpdateProjectModal({
 }: UpdateProjectModalProps) {
   const [open, setOpen] = useState(false);
 
-  const initialImages: FileMetadata[] = projectData.projectImages.map(
-    (url) => ({
-      url: url,
-      name: url.substring(url.lastIndexOf("/") + 1),
-    })
-  );
+  const initialImages: FileMetadata[] = projectData.projectImages.map((url, index) => ({
+  id: `${index}-${Date.now()}`, // unique id
+  url,
+  name: url.substring(url.lastIndexOf("/") + 1),
+  size: 0, // placeholder value since existing images already uploaded
+  type: "image/jpeg", // or "image/png" (as a fallback)
+}));
+
 
   const [images, setImages] = useState<(File | FileMetadata)[]>(initialImages);
 
@@ -124,7 +126,6 @@ export default function UpdateProjectModal({
       });
 
       const res = await updateProject(projectData._id, formData);
-      console.log(res);
       if (res.success) {
         toast.success("✅ Project updated successfully!");
       }

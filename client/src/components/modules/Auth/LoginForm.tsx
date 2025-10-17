@@ -17,6 +17,7 @@ import { signIn } from "next-auth/react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const loginFormSchema = z.object({
   email: z.email().min(2, "Email is required "),
@@ -33,6 +34,7 @@ export default function LoginForm() {
       password: "",
     },
   });
+  const router = useRouter();
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
       const res = await signIn("credentials", {
@@ -49,6 +51,7 @@ export default function LoginForm() {
         return;
       }
       toast.success("Login Successful");
+      router.push("/dashboard");
     } catch (error) {
       console.error(error);
     }

@@ -33,7 +33,7 @@ export default function MultipleImageUploader({ onChange, initialFiles = [] }: P
     maxFiles,
   });
 
-  // যখনই কিছু পরিবর্তন হবে, সব image parent এ পাঠানো হবে
+ 
   useEffect(() => {
     const imageList: (File | FileMetadata)[] = [
       ...existingImages,

@@ -1,13 +1,22 @@
 "use client";
+
+import { useEffect } from "react";
 import { signOut } from "next-auth/react";
+import { logout } from "@/services";
 
-export default function Logout() {
-  const handleLogout = () => {
-    signOut({
-      callbackUrl: "/",
-      redirect: true,
-    });
-  };
+export default function LogoutPage() {
+  useEffect(() => {
+    const handleAutoLogout = async () => {
+      try {
+        await logout();
+        await signOut({ callbackUrl: "/", redirect: true });
+      } catch (error) {
+        console.error("Auto logout failed:", error);
+      }
+    };
 
-  return <button onClick={handleLogout}>Logout</button>;
+    handleAutoLogout();
+  }, []);
+
+  return;
 }

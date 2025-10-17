@@ -8,12 +8,12 @@ import profileImage from "../../../../public/profile.jpeg";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden">
+    <section className="relative pt-20 p-15 flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden">
       {/* className="relative min-h-screen flex items-center justify-center bg-gradient-to-tr from-[#0a021f] via-[#120336] to-[#1a0449] text-white overflow-hidden" */}
       {/* Background glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_#6d28d9_40%,_transparent_100%)] opacity-30 --animate-fade-glow-once"></div>
 
-      <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+      <div className="container mx-auto px-6 md:px-12 flex flex-col-reverse md:flex-row items-center justify-between gap-10 relative z-10">
         {/* Left Content */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -49,6 +49,11 @@ export default function HeroSection() {
           <div className="flex items-center gap-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
+                onClick={() =>
+                  window.open(
+                    "https://drive.google.com/file/d/1m28aO_7dOUzkdoJIEIy4bHtsnI_tlnXP/view?usp=sharing"
+                  )
+                }
                 variant="default"
                 className="relative bg-purple-600 hover:bg-purple-700 text-white flex items-center gap-2 group"
               >

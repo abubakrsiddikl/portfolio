@@ -35,7 +35,7 @@ export default function ContactPage() {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Contact form data:", values);
+    console.log(values)
     toast.success("Message sent successfully!");
     form.reset();
   };

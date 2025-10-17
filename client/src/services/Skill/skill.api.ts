@@ -16,3 +16,21 @@ export const addNewSkill = async (payload: FormData) => {
   });
   return res;
 };
+
+
+// delete skill
+export const deleteSkill = async (id: string) => {
+  const res = await apiRequest(`/skill/delete/${id}`, {
+    method: "DELETE",
+  });
+  return res;
+};
+
+// update skill 
+export const updateSkill = async(id:string, payload: FormData)=>{
+  const res = await apiRequest(`/project/update/${id}`, {
+    method: "PATCH",
+    body: payload,
+  });
+  return res;
+};

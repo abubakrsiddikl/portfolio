@@ -33,7 +33,7 @@ export default function Footer() {
           {[
             { name: "Home", href: "/" },
             { name: "About", href: "/about" },
-            { name: "Projects", href: "/projects" },
+            { name: "Projects", href: "/project" },
             { name: "Blog", href: "/blog" },
             { name: "Contact", href: "/contact" },
           ].map((link, i) => (
@@ -57,9 +57,15 @@ export default function Footer() {
         >
           {[
             { icon: Github, href: "https://github.com/abubakrsiddikl" },
-            { icon: Linkedin, href: "https://linkedin.com" },
-            { icon: Facebook, href: "https://facebook.com" },
-            { icon: Mail, href: "mailto:abubakr@example.com" },
+            {
+              icon: Linkedin,
+              href: "https://www.linkedin.com/in/abubakrsiddik-dev",
+            },
+            {
+              icon: Facebook,
+              href: "https://www.facebook.com/limon.hosen.77582",
+            },
+            { icon: Mail, href: "mailto:abubakrsiddik.dev.com" },
           ].map(({ icon: Icon, href }, i) => (
             <motion.a
               key={i}

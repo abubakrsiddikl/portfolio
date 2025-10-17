@@ -23,3 +23,11 @@ export const login = async (payload: FieldValues) => {
     console.log(error);
   }
 };
+
+// login
+export const logout = async () => {
+  const res = await apiRequest("/auth/logout", {
+    method: "POST",
+  });
+  return res;
+};

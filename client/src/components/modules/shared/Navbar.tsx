@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -13,7 +13,6 @@ import Image from "next/image";
 export default function Navbar() {
   const pathname = usePathname();
   const session = useSession();
-  console.log(session);
   const navLinks = [
     { name: "Home", href: "/", role: "PUBLIC" },
     { name: "About Me", href: "/about", role: "PUBLIC" },
@@ -56,7 +55,13 @@ export default function Navbar() {
             }}
             className="text-2xl font-extrabold text-purple-400"
           >
-            <Image src={logo} alt="logo" width={30} height={30} className="rounded"></Image>
+            <Image
+              src={logo}
+              alt="logo"
+              width={30}
+              height={30}
+              className="rounded"
+            ></Image>
           </motion.div>
         </Link>
 
@@ -113,38 +118,11 @@ export default function Navbar() {
               </Button>
             </SheetTrigger>
             <SheetContent
-              side="right"
-              className="bg-gradient-to-b from-[#0a021f] via-[#120336] to-[#1a0449] border-l border-purple-700/30 text-white"
+              side="left"
+              className="pl-15 bg-gradient-to-b from-[#0a021f] via-[#120336] to-[#1a0449] border-l border-purple-700/30 text-white"
             >
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-xl font-semibold text-purple-400">
-                  Menu
-                </span>
-                <Button
-                  variant="ghost"
-                  className="text-gray-300 hover:text-purple-400"
-                >
-                  <X />
-                </Button>
-              </div>
+              <div className="flex justify-between items-center mb-6"></div>
               <div className="flex flex-col gap-6">
-                {/* {navLinks.map((link, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{
-                      scale: 1.05,
-                      color: "#a855f7",
-                    }}
-                    transition={{ type: "spring", stiffness: 200 }}
-                  >
-                    <Link
-                      href={link.href}
-                      className="text-lg font-medium hover:text-purple-400 transition"
-                    >
-                      {link.name}
-                    </Link>
-                  </motion.div>
-                ))} */}
                 {navLinks.map((link, index) => {
                   const isActive =
                     pathname === link.href ||
@@ -169,7 +147,7 @@ export default function Navbar() {
                   );
                 })}
 
-                <Button className="bg-purple-600 hover:bg-purple-700 mt-6 text-white">
+                <Button className=" max-w-max bg-purple-600 hover:bg-purple-700 mt-6 text-white ">
                   Hire Me
                 </Button>
               </div>

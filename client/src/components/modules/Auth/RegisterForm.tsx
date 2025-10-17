@@ -42,7 +42,6 @@ export default function RegisterForm() {
   const onSubmit = async (values: z.infer<typeof registerFormSchema>) => {
     try {
       const res = await register(values);
-      console.log(res);
       if (res.data.email) {
         toast.success("User register successful");
         router.push("/login");

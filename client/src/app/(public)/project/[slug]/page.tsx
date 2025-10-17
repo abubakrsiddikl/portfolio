@@ -6,7 +6,7 @@ interface ProjectDetailsProps {
   params: { slug: string };
 }
 
-// \Dynamic SEO Metadata
+//  SEO Metadata
 export async function generateMetadata({
   params,
 }: ProjectDetailsProps): Promise<Metadata> {
