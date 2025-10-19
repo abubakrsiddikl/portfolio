@@ -2,9 +2,8 @@ import AddBlogModal from "@/components/modules/Blogs/Modal/AddBlogModal";
 import BlogTable from "@/components/modules/Blogs/Table/BlogTable";
 import { getAllBlogs } from "@/services";
 
-
 export default async function AddBlogPage() {
-  const blogs = await getAllBlogs();
+  const blogs = await getAllBlogs("/blog?limit=10");
   return (
     <div>
       {/* add blog modal */}

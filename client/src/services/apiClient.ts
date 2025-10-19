@@ -1,15 +1,18 @@
 import { env } from "@/config/env";
 import { IErrorResponse, IResponse } from "@/types";
-import { toast } from "sonner";
 
 export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<IResponse<T>> {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+  // console.log("local-storage", token);
   const defaultHeaders: HeadersInit = {
     ...(options?.body instanceof FormData
       ? {}
       : { "Content-Type": "application/json" }),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
   try {
     const response = await fetch(`${env.baseUrl}${endpoint}`, {
@@ -20,7 +23,6 @@ export async function apiRequest<T>(
       credentials: "include",
       ...options,
     });
-
     //  Parse JSON safely
     const data = await response.json();
 
@@ -41,10 +43,10 @@ export async function apiRequest<T>(
   } catch (error: unknown) {
     console.error("API Error:", error);
 
-    //  Ensure type safety for unknown errors
-    if (typeof error === "object" && error && "message" in error) {
-      toast.error(`${error.message}`);
-    }
+    // //  Ensure type safety for unknown errors
+    // if (typeof error === "object" && error && "message" in error) {
+    //   toast.error(`${error.message}`);
+    // }
 
     //  Fallback
     throw {

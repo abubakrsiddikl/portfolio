@@ -29,6 +29,7 @@ import { Plus } from "lucide-react";
 import SingleImageUploader from "@/components/SingleImageUploader";
 import { toast } from "sonner";
 import { addNewBlog } from "@/services";
+import { useRouter } from "next/navigation";
 
 //  Zod Schema
 const blogSchema = z.object({
@@ -58,7 +59,7 @@ export default function AddBlogModal() {
       isFeatured: false,
     },
   });
-
+  const router = useRouter();
   const onSubmit = async (values: BlogFormValues) => {
     if (!image) {
       toast.error("Please select a thumbnail image.");
@@ -77,6 +78,7 @@ export default function AddBlogModal() {
     formData.append("file", image as File);
     const res = await addNewBlog(formData);
     if (res.success) {
+      router.refresh();
       toast.success("✅ Blog Post Successfully Complete");
     }
     setOpen(false);

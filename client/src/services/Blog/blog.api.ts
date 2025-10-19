@@ -1,9 +1,10 @@
+
 import { apiRequest } from "../apiClient";
 import { IBlog } from "./blog.type";
 
 // get all blog
-export const getAllBlogs = async (): Promise<IBlog[]> => {
-  const res = await apiRequest<IBlog[]>("/blog?limit=10");
+export const getAllBlogs = async (endpoint: string): Promise<IBlog[]> => {
+  const res = await apiRequest<IBlog[]>(endpoint);
   return res.data;
 };
 
@@ -13,10 +14,11 @@ export const getBlogBySlug = async (slug: string) => {
   return res.data;
 };
 
-export const getAllRecentBlog = async (): Promise<IBlog[]> => {
-  const res = await apiRequest<IBlog[]>("/blog?limit=3");
-  return res.data;
-};
+// get recent blog
+// export const getAllRecentBlog = async (): Promise<IBlog[]> => {
+//   const res = await apiRequest<IBlog[]>("/blog?limit=3");
+//   return res.data;
+// };
 
 // create new blog
 export const addNewBlog = async (payload: FormData) => {
@@ -32,6 +34,7 @@ export const deleteBlog = async (id: string) => {
   const res = await apiRequest(`/blog/delete/${id}`, {
     method: "DELETE",
   });
+
   return res;
 };
 

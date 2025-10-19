@@ -13,11 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signIn } from "next-auth/react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { login } from "@/services";
 
 export const loginFormSchema = z.object({
   email: z.email().min(2, "Email is required "),
@@ -37,21 +37,12 @@ export default function LoginForm() {
   const router = useRouter();
   const onSubmit = async (values: z.infer<typeof loginFormSchema>) => {
     try {
-      const res = await signIn("credentials", {
-        ...values,
-        callbackUrl: "/",
-        redirect: false,
-      });
-      if (res?.error) {
-        toast.error(
-          res.error === "CredentialsSignin"
-            ? "Invalid email or password!"
-            : res.error
-        );
-        return;
+      const res = await login(values);
+      if (res?.success) {
+        localStorage.setItem("accessToken", res?.data?.accessToken);
+        toast.success("Login Successful");
+        router.push("/dashboard");
       }
-      toast.success("Login Successful");
-      router.push("/dashboard");
     } catch (error) {
       console.error(error);
     }

@@ -30,6 +30,7 @@ import SingleImageUploader from "@/components/SingleImageUploader";
 import { toast } from "sonner";
 
 import { IBlog, updateBlog } from "@/services";
+import { useRouter } from "next/navigation";
 
 // Zod Schema
 const blogSchema = z.object({
@@ -67,6 +68,7 @@ export default function UpdateBlogModal({ blogData }: UpdateBlogModalProps) {
       isFeatured: blogData?.isFeatured ?? false,
     },
   });
+  const router = useRouter();
 
   const onSubmit = async (values: BlogFormValues) => {
     setIsLoading(true);
@@ -94,6 +96,7 @@ export default function UpdateBlogModal({ blogData }: UpdateBlogModalProps) {
       const res = await updateBlog(blogData._id, formData);
 
       if (res.success) {
+        router.refresh();
         toast.success("✅ Blog Post Successfully Updated!");
 
         form.reset(values);

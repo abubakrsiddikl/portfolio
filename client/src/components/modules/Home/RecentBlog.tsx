@@ -1,8 +1,8 @@
-import { getAllRecentBlog } from "@/services";
+import { getAllBlogs } from "@/services";
 import BlogCard from "../Blogs/BlogCard";
 
 export default async function RecentBlogs() {
-  const recentBlogs = await getAllRecentBlog();
+  const recentBlogs = await getAllBlogs("/blog?limit=3");
   return (
     <section>
       <div className="container mx-auto px-6 md:px-12 relative z-10 mt-15">

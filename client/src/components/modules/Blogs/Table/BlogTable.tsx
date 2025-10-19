@@ -14,12 +14,14 @@ import Image from "next/image";
 import Swal from "sweetalert2";
 import UpdateBlogModal from "../Modal/UpdateBlogModal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
   blogs: IBlog[];
 }
 
 export default function BlogTable({ blogs }: Props) {
+  const router = useRouter();
   // handle delete
   const handleDelete = (id: string, title: string) => {
     Swal.fire({
@@ -34,6 +36,7 @@ export default function BlogTable({ blogs }: Props) {
       if (result.isConfirmed) {
         const res = await deleteBlog(id);
         if (res.success) {
+          router.refresh();
           Swal.fire({
             title: "Deleted!",
             text: "Your blog has been deleted.",
@@ -43,7 +46,7 @@ export default function BlogTable({ blogs }: Props) {
       }
     });
   };
-  
+
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow-md">
       <Table>
@@ -82,7 +85,12 @@ export default function BlogTable({ blogs }: Props) {
               </TableCell>
               {/* title cell */}
               <TableCell className="p-2 border border-purple-700">
-                <Link href={`/blogs/${blog.slug}`} className="hover:text-blue-400 hover:underline">{blog.title}</Link>
+                <Link
+                  href={`/blogs/${blog.slug}`}
+                  className="hover:text-blue-400 hover:underline"
+                >
+                  {blog.title}
+                </Link>
               </TableCell>
 
               {/* Publish Date */}
@@ -97,7 +105,7 @@ export default function BlogTable({ blogs }: Props) {
               {/* action cell */}
               <TableCell className="p-2 border border-purple-700 text-center space-x-2">
                 <UpdateBlogModal blogData={blog}></UpdateBlogModal>
-                
+
                 <Button
                   size="icon"
                   variant="destructive"

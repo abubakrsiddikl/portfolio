@@ -6,13 +6,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+
 import logo from "../../../../public/logo.png";
 import Image from "next/image";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function Navbar() {
+  const { user } = useAuth();
   const pathname = usePathname();
-  const session = useSession();
+
   const navLinks = [
     { name: "Home", href: "/", role: "PUBLIC" },
     { name: "About Me", href: "/about", role: "PUBLIC" },
@@ -27,7 +29,7 @@ export default function Navbar() {
       return true;
     }
 
-    if (link.role === "ADMIN" && session.status === "authenticated") {
+    if (link.role === "ADMIN" && user?.role === "ADMIN") {
       return true;
     }
 
@@ -96,7 +98,7 @@ export default function Navbar() {
         {/* Hire Me Button */}
         <div className="hidden md:block">
           <motion.div whileHover={{ scale: 1.05 }}>
-            {!session.data?.user.email && (
+            {!user?.email && (
               <Link href={"/login"}>
                 <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
                   Login
