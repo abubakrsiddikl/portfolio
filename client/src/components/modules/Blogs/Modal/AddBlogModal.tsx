@@ -47,7 +47,7 @@ type BlogFormValues = z.infer<typeof blogSchema>;
 export default function AddBlogModal() {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<BlogFormValues>({
     resolver: zodResolver(blogSchema),
     defaultValues: {
@@ -65,6 +65,7 @@ export default function AddBlogModal() {
       toast.error("Please select a thumbnail image.");
       return;
     }
+    setIsLoading(true);
     // Convert tags from comma-separated string → array
     const tagsArray = values.tags.split(",").map((t) => t.trim());
     const payload = {
@@ -82,6 +83,7 @@ export default function AddBlogModal() {
       toast.success("✅ Blog Post Successfully Complete");
     }
     setOpen(false);
+    setIsLoading(false);
   };
 
   return (
@@ -218,7 +220,7 @@ export default function AddBlogModal() {
                 "w-full mt-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:opacity-90"
               )}
             >
-              Submit Blog
+              {isLoading ? "Adding...": "Add Blog"}
             </Button>
           </form>
         </Form>

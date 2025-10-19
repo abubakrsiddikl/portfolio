@@ -98,7 +98,6 @@ export default function UpdateBlogModal({ blogData }: UpdateBlogModalProps) {
       if (res.success) {
         router.refresh();
         toast.success("✅ Blog Post Successfully Updated!");
-
         form.reset(values);
         setOpen(false);
       } else {

@@ -34,6 +34,7 @@ import { Plus } from "lucide-react";
 import SingleImageUploader from "@/components/SingleImageUploader";
 import { toast } from "sonner";
 import { addNewSkill } from "@/services";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2, "Skill name is required"),
@@ -47,6 +48,7 @@ export type SkillFormValues = z.infer<typeof formSchema>;
 export default function AddSkillModal() {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<SkillFormValues>({
     resolver: zodResolver(formSchema),
@@ -58,11 +60,14 @@ export default function AddSkillModal() {
     },
   });
 
+  const router = useRouter();
+
   const onSubmit = async (data: SkillFormValues) => {
     if (!image) {
       toast.error("Please select a thumbnail image.");
       return;
     }
+    setIsLoading(true);
     const formData = new FormData();
     const payload = {
       ...data,
@@ -72,8 +77,10 @@ export default function AddSkillModal() {
 
     const res = await addNewSkill(formData);
     if (res.success) {
+      router.refresh();
       toast("✅ Skill Added Successful .");
     }
+    setIsLoading(false);
     setOpen(false);
   };
 
@@ -193,7 +200,7 @@ export default function AddSkillModal() {
                 type="submit"
                 className="bg-purple-700 hover:bg-purple-600 text-white"
               >
-                Save Skill
+                {isLoading ? "Save Skill..." : "Save Skill"}
               </Button>
             </div>
           </form>

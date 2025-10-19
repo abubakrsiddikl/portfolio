@@ -8,19 +8,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {  deleteProject, IProject } from "@/services";
-import { Edit, Trash2 } from "lucide-react";
+import { deleteProject, IProject } from "@/services";
+import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import Swal from "sweetalert2";
 
 import Link from "next/link";
 import UpdateProjectModal from "../Modal/UpdateProjectModal";
+import { useRouter } from "next/navigation";
 
 interface Props {
   projects: IProject[];
 }
 
 export default function ProjectTable({ projects }: Props) {
+  const router = useRouter();
   // handle delete
   const handleDelete = (id: string, title: string) => {
     Swal.fire({
@@ -35,6 +37,7 @@ export default function ProjectTable({ projects }: Props) {
       if (result.isConfirmed) {
         const res = await deleteProject(id);
         if (res.success) {
+          router.refresh();
           Swal.fire({
             title: "Deleted!",
             text: "Your blog has been deleted.",
@@ -44,7 +47,7 @@ export default function ProjectTable({ projects }: Props) {
       }
     });
   };
-  
+
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow-md">
       <Table>
@@ -83,7 +86,12 @@ export default function ProjectTable({ projects }: Props) {
               </TableCell>
               {/* title cell */}
               <TableCell className="p-2 border border-purple-700">
-                <Link href={`/project/${project.slug}`} className="hover:text-blue-400 hover:underline">{project.title}</Link>
+                <Link
+                  href={`/project/${project.slug}`}
+                  className="hover:text-blue-400 hover:underline"
+                >
+                  {project.title}
+                </Link>
               </TableCell>
 
               {/* Publish Date */}
@@ -97,15 +105,8 @@ export default function ProjectTable({ projects }: Props) {
 
               {/* action cell */}
               <TableCell className="p-2 border border-purple-700 text-center space-x-2">
-                <UpdateProjectModal projectData={project} ></UpdateProjectModal>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="text-indigo-600 hover:text-indigo-800"
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-                
+                <UpdateProjectModal projectData={project}></UpdateProjectModal>
+
                 <Button
                   size="icon"
                   variant="destructive"

@@ -1,4 +1,4 @@
-import { env } from "@/config/env";
+
 import { apiRequest } from "../apiClient";
 import { ISkill } from "./skill.type";
 

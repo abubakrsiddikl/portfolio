@@ -2,6 +2,8 @@ import AddBlogModal from "@/components/modules/Blogs/Modal/AddBlogModal";
 import BlogTable from "@/components/modules/Blogs/Table/BlogTable";
 import { getAllBlogs } from "@/services";
 
+export const dynamic = "force-dynamic"
+
 export default async function AddBlogPage() {
   const blogs = await getAllBlogs("/blog?limit=10");
   return (

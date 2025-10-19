@@ -2,6 +2,8 @@ import AddSkillModal from "@/components/modules/Skills/Modal/AddSkillModal";
 import SkillTable from "@/components/modules/Skills/Table/SkillTable";
 import { getAllSkills } from "@/services";
 
+export const dynamic = "force-dynamic"
+
 export default async function SkillsPage() {
   const getAllSkill = await getAllSkills();
   return (

@@ -23,6 +23,7 @@ import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { FileMetadata } from "@/hooks/use-file-upload";
 
 import { IProject, updateProject } from "@/services";
+import { useRouter } from "next/navigation";
 
 // Zod Schema
 const updateProjectSchema = z.object({
@@ -50,17 +51,18 @@ export default function UpdateProjectModal({
 }: UpdateProjectModalProps) {
   const [open, setOpen] = useState(false);
 
-  const initialImages: FileMetadata[] = projectData.projectImages.map((url, index) => ({
-  id: `${index}-${Date.now()}`, // unique id
-  url,
-  name: url.substring(url.lastIndexOf("/") + 1),
-  size: 0, // placeholder value since existing images already uploaded
-  type: "image/jpeg", // or "image/png" (as a fallback)
-}));
-
+  const initialImages: FileMetadata[] = projectData.projectImages.map(
+    (url, index) => ({
+      id: `${index}-${Date.now()}`, // unique id
+      url,
+      name: url.substring(url.lastIndexOf("/") + 1),
+      size: 0, // placeholder value since existing images already uploaded
+      type: "image/jpeg", // or "image/png" (as a fallback)
+    })
+  );
 
   const [images, setImages] = useState<(File | FileMetadata)[]>(initialImages);
-
+  const [isLoading, setIsLoading] = useState(false);
   // Setup form
   const form = useForm<UpdateProjectInput>({
     resolver: zodResolver(updateProjectSchema),
@@ -81,9 +83,11 @@ export default function UpdateProjectModal({
     },
   });
 
+  const router = useRouter();
   // Handle submit
   const onSubmit = async (values: UpdateProjectInput) => {
     try {
+      setIsLoading(true);
       const featuresArr = values.features
         .split(",")
         .map((f) => f.trim())
@@ -104,7 +108,6 @@ export default function UpdateProjectModal({
         },
         { filesToUpload: [] as File[], existingImageUrls: [] as string[] }
       );
-      
 
       const deletedImageUrls = projectData.projectImages.filter(
         (url) => !existingImageUrls.includes(url)
@@ -127,9 +130,10 @@ export default function UpdateProjectModal({
 
       const res = await updateProject(projectData._id, formData);
       if (res.success) {
+        router.refresh();
         toast.success("✅ Project updated successfully!");
       }
-
+      setIsLoading(false);
       setOpen(false);
     } catch (error) {
       console.error("Error updating project:", error);

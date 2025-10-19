@@ -11,6 +11,7 @@ import {
 import { deleteSkill, ISkill } from "@/services";
 import { Edit, Trash2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function SkillTable({ skills }: Props) {
+  const router = useRouter();
   // handle delete
   const handleDelete = (id: string, name: string) => {
     Swal.fire({
@@ -32,6 +34,7 @@ export default function SkillTable({ skills }: Props) {
       if (result.isConfirmed) {
         const res = await deleteSkill(id);
         if (res.success) {
+          router.refresh();
           Swal.fire({
             title: "Deleted!",
             text: "Your skill has been deleted.",

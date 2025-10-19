@@ -2,6 +2,8 @@ import AddProjectModal from "@/components/modules/Projects/Modal/AddProjectModal
 import ProjectTable from "@/components/modules/Projects/Table/ProjectTable";
 import { getAllProjects } from "@/services";
 
+export const dynamic = "force-dynamic"
+
 export default async function AddProjectPage() {
   const projects = await getAllProjects();
   return (

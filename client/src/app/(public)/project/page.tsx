@@ -1,6 +1,8 @@
 import ProjectCard from "@/components/modules/Projects/ProjectCard";
 import { getAllProjects } from "@/services";
 
+export const dynamic = "force-dynamic"
+
 export default async function AllProjectsPage() {
   const getAllProject = await getAllProjects();
   return (

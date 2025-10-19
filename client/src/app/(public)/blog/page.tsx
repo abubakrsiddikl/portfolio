@@ -1,6 +1,8 @@
 import BlogCard from "@/components/modules/Blogs/BlogCard";
 import { getAllBlogs } from "@/services";
 
+export const dynamic = "force-dynamic"
+
 export default async function AllBlogs() {
   const getAllBlog = await getAllBlogs("/blog?limit=10");
 

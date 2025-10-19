@@ -77,5 +77,15 @@ export const logout = async () => {
   const res = await apiRequest("/auth/logout", {
     method: "POST",
   });
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: "accessToken",
+    value: "",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
   return res;
 };

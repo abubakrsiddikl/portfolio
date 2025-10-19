@@ -22,6 +22,7 @@ import { Plus } from "lucide-react";
 import MultipleImageUploader from "@/components/MultipleImageUploader";
 import { FileMetadata } from "@/hooks/use-file-upload";
 import { addNewProject } from "@/services";
+import { useRouter } from "next/navigation";
 
 //  Zod Schema
 const createProjectSchema = z.object({
@@ -42,6 +43,7 @@ export type CreateProjectInput = z.infer<typeof createProjectSchema>;
 export default function AddProjectModal() {
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState<(File | FileMetadata)[] | []>([]);
+  const [isLoading, setIsLoading] = useState(false);
   //  Setup form
   const form = useForm<CreateProjectInput>({
     resolver: zodResolver(createProjectSchema),
@@ -59,9 +61,11 @@ export default function AddProjectModal() {
     },
   });
 
+  const router = useRouter();
   //  Handle submit
   const onSubmit = async (values: CreateProjectInput) => {
     try {
+      setIsLoading(true);
       // Convert comma separated string -> array
       const featuresArr = values.features
         ? values.features
@@ -106,11 +110,13 @@ export default function AddProjectModal() {
       // Send request
       const res = await addNewProject(formData);
       if (res.success) {
+        router.refresh();
         toast.success("✅ Project added successfully!");
       }
 
       form.reset();
       setImages([]);
+      setIsLoading(false);
       setOpen(false);
     } catch (error) {
       console.error("Error adding project:", error);
@@ -299,7 +305,7 @@ export default function AddProjectModal() {
               type="submit"
               className="bg-purple-700 hover:bg-purple-800 text-white"
             >
-              Add Project
+              {isLoading ? "Add Project..." : "Add Project"}
             </Button>
           </DialogFooter>
         </form>
