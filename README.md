@@ -31,7 +31,7 @@ This portfolio represents my expertise as a **Junior Web Developer** skilled in 
 | Category | Technologies |
 |-----------|--------------|
 | **Frontend** | Next.js 14, TypeScript, Tailwind CSS, ShadCN/UI |
-| **Backend API** | Node.js, Express.js, MongoDB |
+| **Backend API** | TypeScript ,Node.js, Express.js, Mongoos |
 | **UI/UX** | Framer Motion, Lucide Icons |
 | **SEO Tools** | next-sitemap, Metadata API |
 | **Deployment** | Vercel (Frontend), Render (Backend) |
