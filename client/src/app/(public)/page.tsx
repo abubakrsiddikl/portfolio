@@ -4,12 +4,13 @@ import HeroSection from "@/components/modules/Home/HeroSection";
 import RecentBlogs from "@/components/modules/Home/RecentBlog";
 import { Metadata } from "next";
 
+
 export const dynamic = "force-dynamic";
 
 //  SEO Meta Data
 export const metadata: Metadata = {
   metadataBase: new URL("https://abubakrsiddik-portfolio.vercel.app"),
-  title: "Abu Bakr Siddik | Full Stack Web Developer (MERN & Next.js)",
+  title: "Abu Bakr Siddik | Abu Bakar | Full Stack Web Developer (MERN & Next.js)",
   description:
     "I'm Abu Bakr Siddik — a passionate full-stack web developer skilled in TypeScript, React, Next.js, Express.js, and MongoDB, Mongoose, Prisma, Postgres, SQL , sql . I create modern, scalable, and user-focused web applications that deliver real-world impact. Explore my projects, blogs, and journey.",
   keywords: [

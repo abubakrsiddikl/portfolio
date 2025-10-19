@@ -55,12 +55,6 @@ export default function BlogCard({ blog }: Props) {
             </div>
           )}
 
-          {/* Featured badge */}
-          {blog.isFeatured && (
-            <div className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-              Featured
-            </div>
-          )}
         </div>
 
         {/* Content */}
@@ -70,7 +64,7 @@ export default function BlogCard({ blog }: Props) {
               <p className="text-xs text-indigo-300 uppercase tracking-wider">
                 {blog.category || "General"}
               </p>
-              <h3 className="text-lg md:text-xl font-semibold text-white mt-1 group-hover:text-indigo-200 transition-colors duration-300">
+              <h3 className="text-lg md:text-xl line-clamp-1 font-semibold text-white mt-1 group-hover:text-indigo-200 transition-colors duration-300">
                 {blog.title}
               </h3>
             </div>
@@ -81,7 +75,7 @@ export default function BlogCard({ blog }: Props) {
             </div>
           </div>
 
-          <p className="text-sm text-gray-300 leading-relaxed">
+          <p className="text-sm line-clamp-1 text-gray-300 leading-relaxed">
             {excerpt(blog.content, 140)}
           </p>
 

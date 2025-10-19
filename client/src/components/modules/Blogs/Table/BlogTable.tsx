@@ -86,8 +86,8 @@ export default function BlogTable({ blogs }: Props) {
               {/* title cell */}
               <TableCell className="p-2 border border-purple-700">
                 <Link
-                  href={`/blogs/${blog.slug}`}
-                  className="hover:text-blue-400 hover:underline"
+                  href={`/blog/${blog.slug}`}
+                  className="hover:text-blue-400 hover:underline line-clamp-2"
                 >
                   {blog.title}
                 </Link>

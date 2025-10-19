@@ -149,9 +149,11 @@ export default function Navbar() {
                   );
                 })}
 
-                <Button className=" max-w-max bg-purple-600 hover:bg-purple-700 mt-6 text-white ">
-                  Hire Me
-                </Button>
+                <Link href={"/login"}>
+                  <Button className=" max-w-max bg-purple-600 hover:bg-purple-700 mt-6 text-white ">
+                    Login
+                  </Button>
+                </Link>
               </div>
             </SheetContent>
           </Sheet>

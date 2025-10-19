@@ -14,7 +14,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-w-0">
         {/* Header */}
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-gradient-to-r from-[#1e084c]  to-[#310f70] text-white overflow-hidden">
           <SidebarTrigger className="-ml-1" />

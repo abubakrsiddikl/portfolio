@@ -57,7 +57,6 @@ const updateProject = catchAsync(async (req: Request, res: Response) => {
         ),
       }
     : { ...req.body };
-  console.log(payload)
   const result = await ProjectServices.updateProject(id, payload);
   sendResponse(res, {
     success: true,
