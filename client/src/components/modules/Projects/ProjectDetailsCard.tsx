@@ -48,7 +48,7 @@ export default function ProjectDetailsCard({ project }: ProjectDetailsProps) {
             >
               {project.projectImages?.map((img, i) => (
                 <SwiperSlide key={i}>
-                  <div className="relative w-full h-[300px] md:h-[300px]">
+                  <div className="relative w-full h-[300px] md:h-[400px]">
                     <Image
                       src={img}
                       alt={`${project.title} image ${i + 1}`}

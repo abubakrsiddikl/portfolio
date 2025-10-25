@@ -98,13 +98,17 @@ export default function Navbar() {
         {/* Hire Me Button */}
         <div className="hidden md:block">
           <motion.div whileHover={{ scale: 1.05 }}>
-            {!user?.email && (
-              <Link href={"/login"}>
-                <Button className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300">
-                  Login
-                </Button>
-              </Link>
-            )}
+            (
+            <Button
+              onClick={() =>
+                window.open(
+                  "https://drive.google.com/file/d/1m28aO_7dOUzkdoJIEIy4bHtsnI_tlnXP/view?usp=sharing"
+                )
+              }
+              className="bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_15px_#6d28d9] hover:shadow-[0_0_25px_#a855f7] transition-all duration-300"
+            >
+              Hire Me
+            </Button>
           </motion.div>
         </div>
 
@@ -149,11 +153,16 @@ export default function Navbar() {
                   );
                 })}
 
-                <Link href={"/login"}>
-                  <Button className=" max-w-max bg-purple-600 hover:bg-purple-700 mt-6 text-white ">
-                    Login
-                  </Button>
-                </Link>
+                <Button
+                  onClick={() =>
+                    window.open(
+                      "https://drive.google.com/file/d/1m28aO_7dOUzkdoJIEIy4bHtsnI_tlnXP/view?usp=sharing"
+                    )
+                  }
+                  className=" max-w-max bg-purple-600 hover:bg-purple-700 mt-6 text-white "
+                >
+                  Hire Me
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
